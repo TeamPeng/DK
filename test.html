@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+    <head>
+        <title>东科锐康</title>
+        <link rel="icon" href="dk.jpeg" type="image/jpeg">
+        <meta charset="utf-8">
+    </head>
+    <script type="text/javascript" src="md5.js"></script>
+	<style>
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-in-out;
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #f1f1f1;
+}
+
+.modal-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.modal-btn:hover {
+    background-color: #45a049;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes slideIn {
+    from {transform: translateY(-100px);}
+    to {transform: translateY(0);}
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input[type="button"] {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+input[type="button"]:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.modify {
+    background-color: #ffcccb;
+}
+
+.restore {
+    background-color: #90EE90;
+}
+
+.data, .data1 {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+
+input {
+width: 100px;
+text-align:center;
+}
+    td{
+      width: 100px;
+      word-break: keep-all;
+			text-align:center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .data1{
+      width: 315px;
+    }
+    .modify{
+      background-color: red;
+    }
+    .restore{
+      background-color: green;
+    }
+	</style>
+    <body style="height: 100%; margin: 0">
+<!-- 自定义弹窗 -->
+<div id="custom-alert" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">提示</h2>
+        </div>
+        <div class="modal-body">
+            <p id="modal-message"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn" onclick="closeModal()">确定</button>
+        </div>
+    </div>
+</div>
+		<div>
+		  <form>
+				<input type = "button" onclick = "insertdata()" value = "生成加密字段" ></input>
+				<input type = "button" onclick = "hiddendata()" value = "隐藏加密字段" ></input>
+				<input type = "button" onclick = "insertdata()" value = "显示加密字段" ></input>
+				<input type = "button" onclick = "checkdata()" value = "检测是否修改" ></input>
+				<input type = "button" onclick = "restoredata()" value = "恢复被篡改成绩" ></input>
+				<input type = "button"  value = "导出成绩数据" ></input>
+			</form>
+			<table id="cmdinfo" border="1" style="border-collapse: collapse; text-align:center;table-layout: fixed;width: 1000px;">
+				<tbody>
+
+				</tbody>
+			</table>
+		</div>
+		<div>
+
+    </div>
+        <script type="text/javascript">
+// 显示自定义弹窗
+function showCustomAlert(message, type = 'info') {
+    const modal = document.getElementById('custom-alert');
+    const modalMessage = document.getElementById('modal-message');
+    const modalTitle = document.getElementById('modal-title');
+    const modalHeader = document.querySelector('.modal-header');
+    
+    // 设置消息内容
+    modalMessage.textContent = message;
+    
+    // 根据类型设置不同的样式
+    switch(type) {
+        case 'success':
+            modalHeader.style.backgroundColor = '#4CAF50';
+            modalTitle.textContent = '成功';
+            break;
+        case 'error':
+            modalHeader.style.backgroundColor = '#f44336';
+            modalTitle.textContent = '错误';
+            break;
+        case 'warning':
+            modalHeader.style.backgroundColor = '#ff9800';
+            modalTitle.textContent = '警告';
+            break;
+        default:
+            modalHeader.style.backgroundColor = '#2196F3';
+            modalTitle.textContent = '提示';
+    }
+    
+    modal.style.display = 'block';
+}
+
+// 关闭弹窗
+function closeModal() {
+    const modal = document.getElementById('custom-alert');
+    modal.style.display = 'none';
+}
+
+// 点击弹窗外部关闭弹窗
+window.onclick = function(event) {
+    const modal = document.getElementById('custom-alert');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+
+
+			var data=[
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1601",
+      "民族代码": "1",
+      "姓名": "学生1",
+      "性别": "1",
+      "身高": "172.0",
+      "体重": "65.6",
+      "肺活量": "1048",
+      "五十米跑": "17.5",
+      "坐位体前屈": "14.8"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1602",
+      "民族代码": "1",
+      "姓名": "学生2",
+      "性别": "1",
+      "身高": "172.5",
+      "体重": "65.7",
+      "肺活量": "1476",
+      "五十米跑": "0",
+      "坐位体前屈": "10.8"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1603",
+      "民族代码": "1",
+      "姓名": "学生3",
+      "性别": "1",
+      "身高": "172.4",
+      "体重": "65.6",
+      "肺活量": "1247",
+      "五十米跑": "9.1",
+      "坐位体前屈": "17.7"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1604",
+      "民族代码": "1",
+      "姓名": "学生4",
+      "性别": "2",
+      "身高": "172.0",
+      "体重": "65.6",
+      "肺活量": "1198",
+      "五十米跑": "18.5",
+      "坐位体前屈": "14.3"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1605",
+      "民族代码": "1",
+      "姓名": "学生5",
+      "性别": "1",
+      "身高": "171.9",
+      "体重": "65.6",
+      "肺活量": "3466",
+      "五十米跑": "7.6",
+      "坐位体前屈": "15.4"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1606",
+      "民族代码": "1",
+      "姓名": "学生6",
+      "性别": "1",
+      "身高": "167.1",
+      "体重": "65.6",
+      "肺活量": "829",
+      "五十米跑": "11.5",
+      "坐位体前屈": "9.6"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1607",
+      "民族代码": "1",
+      "姓名": "学生7",
+      "性别": "1",
+      "身高": "168.4",
+      "体重": "65.7",
+      "肺活量": "1463",
+      "五十米跑": "11.8",
+      "坐位体前屈": "12.7"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1608",
+      "民族代码": "1",
+      "姓名": "学生8",
+      "性别": "1",
+      "身高": "172.7",
+      "体重": "65.7",
+      "肺活量": "732",
+      "五十米跑": "10.5",
+      "坐位体前屈": "11.6"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1609",
+      "民族代码": "1",
+      "姓名": "学生9",
+      "性别": "1",
+      "身高": "172.7",
+      "体重": "65.6",
+      "肺活量": "1152",
+      "五十米跑": "13.1",
+      "坐位体前屈": "14.1"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1610",
+      "民族代码": "1",
+      "姓名": "学生10",
+      "性别": "1",
+      "身高": "171.6",
+      "体重": "65.7",
+      "肺活量": "1250",
+      "五十米跑": "14.1",
+      "坐位体前屈": "10.3"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "1",
+      "班级名称": "（1）班",
+      "学籍号": "1621",
+      "民族代码": "1",
+      "姓名": "学生11",
+      "性别": "1",
+      "身高": "170.6",
+      "体重": "65.7",
+      "肺活量": "1126",
+      "五十米跑": "15",
+      "坐位体前屈": "40.0"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1622",
+      "民族代码": "1",
+      "姓名": "学生12",
+      "性别": "1",
+      "身高": "173.0",
+      "体重": "65.6",
+      "肺活量": "1535",
+      "五十米跑": "11.2",
+      "坐位体前屈": "38.7"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1623",
+      "民族代码": "1",
+      "姓名": "学生13",
+      "性别": "1",
+      "身高": "168.1",
+      "体重": "51.2",
+      "肺活量": "1026",
+      "五十米跑": "7.3",
+      "坐位体前屈": "27.3"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1624",
+      "民族代码": "1",
+      "姓名": "学生14",
+      "性别": "1",
+      "身高": "156.2",
+      "体重": "51.3",
+      "肺活量": "1029",
+      "五十米跑": "8.2",
+      "坐位体前屈": "37.2"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1625",
+      "民族代码": "1",
+      "姓名": "学生15",
+      "性别": "2",
+      "身高": "160.1",
+      "体重": "51.3",
+      "肺活量": "1260",
+      "五十米跑": "9",
+      "坐位体前屈": "21.6"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1626",
+      "民族代码": "1",
+      "姓名": "学生16",
+      "性别": "1",
+      "身高": "163.6",
+      "体重": "51.3",
+      "肺活量": "1032",
+      "五十米跑": "9.6",
+      "坐位体前屈": "31.8"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1627",
+      "民族代码": "1",
+      "姓名": "学生17",
+      "性别": "1",
+      "身高": "161.9",
+      "体重": "51.3",
+      "肺活量": "1364",
+      "五十米跑": "10.4",
+      "坐位体前屈": "13.0"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1628",
+      "民族代码": "1",
+      "姓名": "学生18",
+      "性别": "1",
+      "身高": "162.9",
+      "体重": "51.3",
+      "肺活量": "1699",
+      "五十米跑": "0",
+      "坐位体前屈": "40.0"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1629",
+      "民族代码": "1",
+      "姓名": "学生19",
+      "性别": "2",
+      "身高": "153.2",
+      "体重": "51.4",
+      "肺活量": "1483",
+      "五十米跑": "9.2",
+      "坐位体前屈": "32.1"
+    },
+    {
+      "年级编号": "22",
+      "班级编号": "3",
+      "班级名称": "（3）班",
+      "学籍号": "1630",
+      "民族代码": "1",
+      "姓名": "学生20",
+      "性别": "2",
+      "身高": "154.2",
+      "体重": "51.4",
+      "肺活量": "1578",
+      "五十米跑": "10.6",
+      "坐位体前屈": "25.6"
+    }
+  ];
+				
+				  str="<tr><td>序号</td><td>年级编号</td><td>班级编号</td><td>班级名称</td><td>学籍号</td><td>民族代码</td><td>姓名</td><td>性别</td><td>身高</td><td>体重</td><td>肺活量</td><td>五十米跑</td><td>坐位体前屈</td><td class='data'>原始数据</td><td class='data data1'>加密数据</td></tr>";
+				for (var i=0;i<data.length;i++)
+				{ 
+					var data1=JSON.stringify(data[i])
+          var data2=md5(data1);
+					str+=`
+					<tr>
+					<td>${i+1}</td>
+					<td><input id="${"年级编号"+i}" type="text" value="${data[i].年级编号}"/></td>
+					<td><input id="${"班级编号"+i}" type="text" value="${data[i].班级编号}"/></td>
+					<td><input id="${"班级名称"+i}" type="text" value="${data[i].班级名称}"/></td>
+					<td><input id="${"学籍号"+i}" type="text" value="${data[i].学籍号}"/></td>
+					<td><input id="${"民族代码"+i}" type="text" value="${data[i].民族代码=='1'?'汉':''}"/></td>
+					<td><input id="${"姓名"+i}" type="text" value="${data[i].姓名}"/></td>
+					<td><input id="${"性别"+i}" type="text" value="${data[i].性别=='1'?'男':'女'}"/></td>
+					<td><input id="${"身高"+i}" type="text" value="${data[i].身高}"/></td>
+					<td><input id="${"体重"+i}" type="text" value="${data[i].体重}"/></td>
+					<td><input id="${"肺活量"+i}" type="text" value="${data[i].肺活量}"/></td>
+					<td><input id="${"五十米跑"+i}" type="text" value="${data[i].五十米跑}"/></td>
+					<td><input id="${"坐位体前屈"+i}" type="text" value="${data[i].坐位体前屈}"/></td>
+					<td class="data ">${data1}</td>
+					<td class="data data1">${data2}</td>
+				</tr>`;
+				}
+				var tbody=document.querySelector("tbody");
+				tbody.innerHTML=str;
+        function hiddendata(){
+          var classdata=document.getElementsByClassName("data");
+          for(var j in classdata){
+            classdata[j].hidden=true;
+          }
+        }
+        hiddendata();
+
+        function insertdata(){
+          var classdata=document.getElementsByClassName("data");
+          for(var j in classdata){
+            classdata[j].removeAttribute("hidden");
+          }
+        }
+
+
+
+        function checkdata(){
+          var flag=true;
+          for (var i=0;i<data.length;i++)
+				{ 
+          var 年级编号=document.getElementById("年级编号"+i);
+          var 班级编号=document.getElementById("班级编号"+i);
+          var 班级名称=document.getElementById("班级名称"+i);
+          var 学籍号=document.getElementById("学籍号"+i);
+          var 民族代码=document.getElementById("民族代码"+i);
+          var 姓名=document.getElementById("姓名"+i);
+          var 性别=document.getElementById("性别"+i);
+          var 身高=document.getElementById("身高"+i);
+          var 体重=document.getElementById("体重"+i);
+          var 肺活量=document.getElementById("肺活量"+i);
+          var 五十米跑=document.getElementById("五十米跑"+i);
+          var 坐位体前屈=document.getElementById("坐位体前屈"+i);
+          if(年级编号.value!=data[i].年级编号){
+            flag=false;
+            年级编号.classList.add("modify");
+          }
+          if(班级编号.value!=data[i].班级编号){
+            flag=false;
+            班级编号.classList.add("modify");
+          }
+          if(班级名称.value!=data[i].班级名称){
+            flag=false;
+            班级名称.classList.add("modify");
+          }
+          if(学籍号.value!=data[i].学籍号){
+            flag=false;
+            学籍号.classList.add("modify");
+          }
+          if(民族代码.value!=(data[i].民族代码==1?'汉':'')){
+            flag=false;
+            民族代码.classList.add("modify");
+          }
+          if(姓名.value!=data[i].姓名){
+            flag=false;
+            姓名.classList.add("modify");
+          }
+          if(性别.value!=(data[i].性别==1?'男':'女')){
+            flag=false;
+            性别.classList.add("modify");
+          }
+          if(身高.value!=data[i].身高){
+            flag=false;
+            身高.classList.add("modify");
+          }
+          if(体重.value!=data[i].体重){
+            flag=false;
+            体重.classList.add("modify");
+          }
+          if(肺活量.value!=data[i].肺活量){
+            flag=false;
+            肺活量.classList.add("modify");
+          }
+          if(五十米跑.value!=data[i].五十米跑){
+            flag=false;
+            五十米跑.classList.add("modify");
+          }
+          if(坐位体前屈.value!=data[i].坐位体前屈){
+            flag=false;
+            坐位体前屈.classList.add("modify");
+          }
+
+        }
+        if(flag){
+          // alert('数据未被修改')
+          showCustomAlert('数据未修改','info')
+        }else{
+          // alert('数据已被修改')
+          showCustomAlert('数据已被修改','error')
+        }
+        }
+
+
+        function restoredata(){
+          var flag=true;
+          for (var i=0;i<data.length;i++)
+				{ 
+          var 年级编号=document.getElementById("年级编号"+i);
+          var 班级编号=document.getElementById("班级编号"+i);
+          var 班级名称=document.getElementById("班级名称"+i);
+          var 学籍号=document.getElementById("学籍号"+i);
+          var 民族代码=document.getElementById("民族代码"+i);
+          var 姓名=document.getElementById("姓名"+i);
+          var 性别=document.getElementById("性别"+i);
+          var 身高=document.getElementById("身高"+i);
+          var 体重=document.getElementById("体重"+i);
+          var 肺活量=document.getElementById("肺活量"+i);
+          var 五十米跑=document.getElementById("五十米跑"+i);
+          var 坐位体前屈=document.getElementById("坐位体前屈"+i);
+          if(年级编号.value!=data[i].年级编号){
+            flag=false;
+            年级编号.classList.remove("modify");
+            年级编号.value=data[i].年级编号
+            年级编号.classList.add("restore");
+          }
+          if(班级编号.value!=data[i].班级编号){
+            flag=false;
+            班级编号.classList.remove("modify");
+            班级编号.value=data[i].班级编号
+            班级编号.classList.add("restore");
+          }
+          if(班级名称.value!=data[i].班级名称){
+            flag=false;
+            班级名称.classList.remove("modify");
+            班级名称.value=data[i].班级名称
+            班级名称.classList.add("restore");
+          }
+          if(学籍号.value!=data[i].学籍号){
+            flag=false;
+            学籍号.classList.remove("modify");
+            学籍号.value=data[i].学籍号
+            学籍号.classList.add("restore");
+          }
+          if(民族代码.value!=(data[i].民族代码==1?'汉':'')){
+            flag=false;
+            民族代码.classList.remove("modify");
+            民族代码.value=data[i].民族代码==1?'汉':'';
+            民族代码.classList.add("restore");
+          }
+          if(姓名.value!=data[i].姓名){
+            flag=false;
+            姓名.classList.remove("modify");
+            姓名.value=data[i].姓名
+            姓名.classList.add("restore");
+          }
+          if(性别.value!=(data[i].性别==1?'男':'女')){
+            flag=false;
+            性别.classList.remove("modify");
+            性别.value=data[i].性别==1?'男':'女';
+            性别.classList.add("restore");
+          }
+          if(身高.value!=data[i].身高){
+            flag=false;
+            身高.classList.remove("modify");
+            身高.value=data[i].身高
+            身高.classList.add("restore");
+          }
+          if(体重.value!=data[i].体重){
+            flag=false;
+            体重.classList.remove("modify");
+            体重.value=data[i].体重
+            体重.classList.add("restore");
+          }
+          if(肺活量.value!=data[i].肺活量){
+            flag=false;
+            肺活量.classList.remove("modify");
+            肺活量.value=data[i].肺活量
+            肺活量.classList.add("restore");
+          }
+          if(五十米跑.value!=data[i].五十米跑){
+            flag=false;
+            五十米跑.classList.remove("modify");
+            五十米跑.value=data[i].五十米跑
+            五十米跑.classList.add("restore");
+          }
+          if(坐位体前屈.value!=data[i].坐位体前屈){
+            flag=false;
+            坐位体前屈.classList.remove("modify");
+            坐位体前屈.value=data[i].坐位体前屈
+            坐位体前屈.classList.add("restore");
+          }
+        }
+        if( flag){
+          // alert('数据未修改无需恢复')
+          showCustomAlert('数据未修改无需恢复','info')
+        }else{
+          // alert('数据已恢复')
+          showCustomAlert('数据已恢复','success')
+        }
+        }
+       
+        </script>
+    </body>
+</html>
